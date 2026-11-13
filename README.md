@@ -4,6 +4,12 @@
 
 **[Открыть игру](https://ckroco.github.io/mesto-resheniy-career/)** · Без регистрации
 
+<img width="560" height="332" alt="Start" src="https://github.com/user-attachments/assets/5678a12d-de07-4c2d-8f39-d6b95f99e87d" />
+<img width="615" height="490" alt="Vazhno_now" src="https://github.com/user-attachments/assets/b90957c3-998c-4b71-9f21-027d9ffb0c9a" />
+<img width="418" height="862" alt="Result" src="https://github.com/user-attachments/assets/d4308bbc-5dfb-4414-b872-5a3b859b1f5f" />
+<img width="397" height="909" alt="Result_fin" src="https://github.com/user-attachments/assets/e68861dd-090a-443d-9762-382c6cea3d77" />
+
+
 ## Как это работает
 
 1. Опиши, как работаешь сейчас, и выбери, чем хотелось бы заниматься дальше.
