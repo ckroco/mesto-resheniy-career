@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примерь новую профессию | Место решений</title>
+<style>
+:root{color-scheme:light;--ink:#173f3b;--muted:#42665f;--cream:#fcfaf4;--mint:#e0f3ed;--teal:#087368;--line:#aacac0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(137deg,#d6efed 0%,#fcfaf4 51%,#f5e6c8 100%);color:var(--ink);font:16px/1.5 "Open Sans",system-ui,sans-serif}
+main{max-width:810px;margin:auto;padding:24px 18px 50px}
+header{display:flex;align-items:center;gap:13px;margin:0 0 18px;font-weight:750}
+header img{width:52px;height:52px;border-radius:50%}
+#game{background:#fffefa;border-radius:26px;padding:clamp(18px,5vw,42px);box-shadow:0 12px 36px #173f3b15;min-width:0}
+h2,h3{font-family:Georgia,serif;line-height:1.15}
+h2{font-size:clamp(1.95rem,6vw,3.25rem);margin:0 0 16px}
+h3{font-size:1.4rem;margin:0 0 10px}
+p{margin:.6em 0 1.1em}
+.intro{max-width:55ch;font-size:1.15rem}
+fieldset{padding:0;border:0;min-width:0;margin:0 0 24px}
+legend,fieldset strong{font-weight:750}
+legend{margin-bottom:6px}
+label{display:block}
+select,input[type=number]{width:100%;font:inherit;color:inherit;background:#f5fbf8;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:48px}
+input[type=checkbox],input[type=radio]{flex:0 0 auto;accent-color:var(--teal);width:18px;height:18px;margin:3px 0 0}
+.choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;background:#f1f7f4;cursor:pointer}
+.choice:hover{background:#e7f3ed}
+.choice:has(input:checked){background:#c9ece0;box-shadow:inset 3px 0 var(--teal)}
+.choice-grid,.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fields label{font-size:.94rem}.fields input{margin-top:5px}
+.hint,.group-hint,.progress{color:var(--muted);font-size:.94rem}
+.progress{font-weight:750;margin:0 0 12px}
+.progress progress{width:100%;height:8px;display:block;accent-color:var(--teal);margin-top:7px}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+button,.download-link,.consultation-link{display:inline-block;font:inherit;font-weight:750;min-height:48px;padding:10px 17px;border:1px solid transparent;border-radius:14px;background:var(--teal);color:#fff;cursor:pointer;text-decoration:none}
+button:hover,.download-link:hover,.consultation-link:hover{background:#075c54}
+button.secondary{background:#f4f7f3;color:var(--ink);border-color:var(--line)}
+button.secondary:hover{background:#e6f1ea}
+:focus-visible{outline:3px solid #a24a21;outline-offset:3px}
+.error{color:#a02d28;font-weight:700}
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0}
+th,td{text-align:left;vertical-align:top;padding:9px 6px;border-bottom:1px solid #c9ded4;overflow-wrap:anywhere}
+thead{background:var(--mint)}
+.result,details{background:#e9f4ee;border-radius:16px;padding:16px;margin:17px 0}
+.result p:last-child{margin-bottom:0}
+.consultation{margin:22px 0;padding:16px;border:1px solid var(--line);border-radius:16px;background:#f5fbf8}
+.consultation .hint{margin:8px 0 0}
+summary{cursor:pointer;font-weight:750}
+.download-preview{display:block;max-width:100%;height:auto;border-radius:12px;margin:12px 0}
+@media(max-width:520px){.choice-grid,.fields{grid-template-columns:1fr}th,td{font-size:.85rem}main{padding-inline:12px}}
+</style>
+</head>
+<body>
+<main>
+<header><img id="brand-logo" src="data:image/jpeg;base64,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" alt=""><span>Место решений</span></header>
+<section id="game" aria-label="Игра о работе"></section>
+</main>
+<script>
+const activities = [
+  ['Работаю с цифрами и документами', 'Вести учёт, работать с цифрами и документами', 'Возьми учебный пример и попробуй сверить платежи или составить простой отчёт.'],
+  ['Организую проекты, процессы или мероприятия', 'Организовывать проекты, процессы или мероприятия', 'Спланируй небольшое мероприятие или проект: сроки, люди, расходы.'],
+  ['Работаю с клиентами или продаю', 'Работать с клиентами или продавать', 'Попроси знакомого разыграть разговор с клиентом и попробуй выяснить, что ему нужно.'],
+  ['Обучаю людей', 'Обучать детей или взрослых', 'Подготовь и проведи короткое занятие на тему, в которой хорошо разбираешься.'],
+  ['Помогаю людям или ухаживаю за ними', 'Помогать людям или ухаживать за ними', 'Поговори со специалистом и узнай, как проходит его смена и какое обучение требуется.'],
+  ['Готовлю или пеку', 'Готовить, печь хлеб, торты или десерты', 'Испеки небольшую партию, посчитай себестоимость и собери отзывы о продукте.'],
+  ['Вожу транспорт или доставляю грузы', 'Водить транспорт или доставлять грузы', 'Посмотри три вакансии водителей и выпиши требования к правам, графику и стажу.'],
+  ['Шью, мастерю или ремонтирую', 'Шить, мастерить или ремонтировать', 'Сделай одну небольшую вещь или возьми простой ремонт и запиши, сколько времени это заняло.'],
+  ['Пишу, оформляю или снимаю', 'Писать тексты, заниматься дизайном, фото или видео', 'Сделай один небольшой образец работы по реальному заданию.'],
+  ['Работаю с программами или автоматизирую задачи', 'Тестировать программы или автоматизировать задачи', 'Проверь знакомую программу и опиши одну ошибку так, чтобы другой человек смог её повторить.'],
+  ['Работаю с растениями или животными', 'Ухаживать за растениями или животными', 'Узнай, какие ежедневные обязанности есть в интересующей тебя работе, и попробуй одну из них.'],
+  ['Занимаюсь другими задачами', 'Попробовать другое дело', 'Выбери одну идею и найди человека, который занимается этим каждый день.'],
+  ['', 'Пока изучаю варианты', 'Выбери два интересных направления и сравни, как в каждом проходит обычный рабочий день.']
+];
+
+const axes = [
+  ['place', 'Где работаю', 'Где хочу работать', 'Место работы', [
+    ['Работаю на территории работодателя', 'Работать на территории работодателя'],
+    ['Работаю удалённо', 'Работать удалённо'],
+    ['Работаю частично удалённо', 'Совмещать удалённую работу и работу на месте'],
+    ['Работаю в разъездах', 'Работать в разъездах'],
+    ['Работаю в своей мастерской, студии или другой точке', 'Работать в своей мастерской, студии или другой точке'],
+    ['Работаю в разных местах', 'Выбирать место в зависимости от задач']
+  ]],
+  ['people', 'С кем работаю', 'С кем хочу работать', 'Окружение', [
+    ['Работаю в основном самостоятельно', 'Работать в основном самостоятельно'],
+    ['Работаю в небольшой команде', 'Работать в небольшой команде'],
+    ['Работаю в большой команде', 'Работать в большой команде'],
+    ['Много общаюсь с клиентами, учениками или посетителями', 'Много общаться с клиентами, учениками или посетителями'],
+    ['Руковожу командой', 'Руководить командой'],
+    ['Сочетаю самостоятельную работу и общение', 'Сочетать самостоятельную работу и общение']
+  ]],
+  ['schedule', 'Какой у меня график', 'Какой график мне подходит', 'График', [
+    ['Работаю по фиксированному графику', 'Работать по фиксированному графику'],
+    ['Работаю по гибкому графику', 'Работать по гибкому графику'],
+    ['Работаю по сменам', 'Работать по сменам'],
+    ['Работаю неполный день или неполную неделю', 'Работать неполный день или неполную неделю']
+  ]],
+  ['employment', 'Как я работаю', 'Как хочу работать', 'Занятость', [
+    ['Работаю по найму', 'Работать по найму'],
+    ['Работаю на себя и беру заказы', 'Работать на себя и брать заказы'],
+    ['Веду своё дело', 'Открыть или развивать своё дело'],
+    ['Совмещаю найм с заказами или своим делом', 'Совмещать найм с заказами или своим делом']
+  ]]
+];
+const attitudes = ['Доход должен сохраниться или вырасти','Готова или готов временно получать меньше','Допускаю меньший доход надолго','Мне нужно сначала посчитать'];
+const dayTasks = [
+  ['Сверять суммы и даты в документах', 'Запрашивать недостающие сведения', 'Искать причину расхождения', 'Готовить отчёт к сроку'],
+  ['Уточнять задачи и сроки', 'Согласовывать работу нескольких людей', 'Пересматривать план при задержках', 'Сообщать о проблемах и договариваться о решении'],
+  ['Уточнять, что нужно клиенту', 'Объяснять условия', 'Работать с возражениями', 'Возвращаться к незавершённым обращениям'],
+  ['Готовить занятия', 'Объяснять одно и то же разными способами', 'Проверять задания и давать обратную связь', 'Подстраивать занятие под разный темп'],
+  ['Уточнять, какая помощь нужна', 'Соблюдать правила ухода и безопасности', 'Вести записи о выполненных задачах', 'Справляться с повторяющимися и сложными ситуациями'],
+  ['Закупать продукты и планировать партии', 'Долго работать стоя у печи или стола', 'Считать себестоимость и потери', 'Убирать рабочее место и следить за чистотой'],
+  ['Проверять транспорт перед выездом', 'Планировать маршрут и остановки', 'Поддерживать внимание в долгой поездке', 'Перестраивать маршрут при задержках'],
+  ['Снимать мерки или подбирать материалы', 'Повторять точные ручные операции', 'Исправлять недочёты', 'Чистить инструменты и рабочее место'],
+  ['Уточнять задачу и ограничения', 'Готовить первые варианты', 'Вносить правки по обратной связи', 'Сдавать работу в согласованный срок'],
+  ['Повторять сценарии в программе', 'Описывать найденные сбои', 'Уточнять условия воспроизведения', 'Перепроверять работу после изменений'],
+  ['Выполнять ежедневные процедуры ухода', 'Замечать и записывать изменения', 'Чистить инвентарь и рабочее место', 'Планировать работу с учётом сезона или режима ухода']
+];
+const skills = ['Договариваться с людьми', 'Считать расходы и вести бюджет', 'Планировать работу и сроки', 'Объяснять и обучать', 'Разбираться в инструкциях', 'Работать с цифровыми инструментами', 'Решать спорные вопросы', 'Работать руками и пользоваться инструментами'];
+const priorities = {
+  tasks: ['Сменить задачи', 'Сравни два интересных занятия и выпиши по одной типичной задаче, которую можно попробовать на этой неделе.'],
+  place: ['Изменить место работы', 'Найди три предложения с подходящим форматом и уточни, где действительно выполняют работу.'],
+  people: ['Изменить окружение', 'Спроси человека из интересной тебе команды, с кем и как часто он общается в обычный рабочий день.'],
+  schedule: ['Изменить график', 'Уточни график в двух подходящих вакансиях и примерь его к своей обычной неделе.'],
+  business: ['Работать на себя', 'Опиши, что будешь предлагать и кому. Оцени затраты и проверь интерес на одной небольшой пробе.'],
+  money: ['Сохранить доход', 'Сравни три реальных предложения или заказа с нужным тебе доходом на руки. Отметь, чего не хватает, чтобы выйти на эту сумму.']
+};
+const titles = ['Примерь новую профессию','Как я работаю сейчас','Хочу сменить профессию','Что с доходом?','Что важнее всего?','Примерь рабочий день','Что возьмёшь с собой?','Твоя карта перемен'];
+const game = document.getElementById('game');
+const fmt = new Intl.NumberFormat('ru-RU');
+const storageKey = 'mesto-resheniy-career-v2';
+let choices = [{activities: []}, {activities: []}];
+let money = {current: '', floor: '', attitude: ''};
+let priority = '';
+let role = '';
+let reviews = {};
+let selectedSkills = [];
+let step = 0;
+
+function ids(values, max) {
+  return Array.isArray(values) ? [...new Set(values.filter(id => typeof id === 'string' && /^(0|[1-9]\d*)$/.test(id) && Number(id) < max))] : [];
+}
+function restore() {
+  try {
+    const data = JSON.parse(localStorage.getItem(storageKey));
+    if (!data || !Array.isArray(data.choices)) return;
+    choices = choices.map((_, phase) => {
+      const stored = data.choices[phase] ?? {};
+      const selected = ids(stored.activities, activities.length).filter(id => activities[id][phase]);
+      const answer = {activities: selected.includes('12') ? ['12'] : selected};
+      for (const [key, , , , options] of axes) {
+        answer[key] = ids([stored[key]], options.length)[0] ?? '';
+      }
+      return answer;
+    });
+    for (const key of ['current','floor']) {
+      const value = data.money?.[key];
+      if (typeof value === 'string' && /^\d{1,10}$/.test(value) && Number(value) <= 1000000000) money[key] = value;
+    }
+    money.attitude = ids([data.money?.attitude], attitudes.length)[0] ?? '';
+    priority = Object.hasOwn(priorities, data.priority) ? data.priority : '';
+    role = choices[1].activities.includes(data.role) && dayTasks[data.role] ? data.role : '';
+    for (const id of choices[1].activities) {
+      if (dayTasks[id] && Object.hasOwn(data.reviews ?? {}, id)) reviews[id] = ids(data.reviews[id], dayTasks[id].length);
+    }
+    selectedSkills = ids(data.selectedSkills, skills.length);
+    if (Number.isInteger(data.step) && data.step >= 0 && data.step < titles.length) step = data.step;
+    if (step > 1 && !completeWork(choices[0])) step = 1;
+    if (step > 2 && !completeWork(choices[1])) step = 2;
+    if (step > 3 && money.attitude === '') step = 3;
+    if (step > 4 && !priority) step = 4;
+  } catch {
+    // Storage may be blocked when the page is opened as a local file.
+  }
+}
+function persist() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify({step, choices, money, priority, role, reviews, selectedSkills}));
+  } catch {
+    return false;
+  }
+  return true;
+}
+function completeWork(answer) {
+  return answer.activities.length > 0 && axes.every(([key]) => answer[key] !== undefined && answer[key] !== '');
+}
+function goTo(next) {
+  step = next;
+  persist();
+  render(true);
+}
+function render(focus = false) {
+  const progress = step > 0 && step < 7 ? `<div class="progress">Шаг ${step} из 6<progress value="${step}" max="6" aria-label="Шаг игры"></progress></div>` : '';
+  game.innerHTML = progress + `<h2 tabindex="-1">${titles[step]}</h2>`;
+  if (step === 0) {
+    game.insertAdjacentHTML('beforeend', '<p class="intro">Сравни свою работу с той, которую хочешь попробовать. Примерь её задачи, прикинь доход и выбери первый шаг.</p><button type="button" id="start">Сейчас работаю</button>');
+    game.querySelector('#start').onclick = () => goTo(1);
+  } else if (step < 7) {
+    showForm();
+  } else {
+    showResult();
+  }
+  if (focus) game.querySelector('h2').focus();
+}
+function workFields(phase) {
+  const answer = choices[phase];
+  const heading = phase === 0 ? 'Чем я занимаюсь на работе' : 'Чем я хочу заниматься';
+  const options = activities.map((activity, index) => {
+    const label = activity[phase];
+    if (!label) return '';
+    const checked = answer.activities.includes(String(index)) ? 'checked' : '';
+    return `<label class="choice"><input type="checkbox" name="activities" value="${index}" ${checked}>${label}</label>`;
+  }).join('');
+  const fields = axes.map(([key, present, future, , values]) => `<fieldset><label for="${key}"><strong>${phase === 0 ? present : future}</strong></label>
+    <select id="${key}" name="${key}" required><option value="">Выбери вариант</option>${values.map((labels, index) => `<option value="${index}" ${answer[key] === String(index) ? 'selected' : ''}>${labels[phase]}</option>`).join('')}</select></fieldset>`).join('');
+  return `<fieldset><legend>${heading}</legend><p class="group-hint">Можно выбрать несколько вариантов.</p><div class="choice-grid">${options}</div></fieldset>${fields}`;
+}
+
+function incomeFields() {
+  return `<fieldset><legend>Подойдёт ли работа с меньшей оплатой?</legend>${optionCards('attitude', attitudes.map((item, i) => [String(i), item]), [money.attitude], 'radio')}</fieldset>
+    <p class="hint">Суммы укажи за месяц на руки, в рублях. Поля можно пропустить.</p>
+    <div class="fields"><label>Текущий доход<input type="number" name="current" min="0" max="1000000000" step="1" inputmode="numeric" value="${money.current}"></label><label>Минимум, который тебе нужен<input type="number" name="floor" min="0" max="1000000000" step="1" inputmode="numeric" value="${money.floor}"></label></div>`;
+}
+
+function optionCards(name, labels, checked, type = 'checkbox') {
+  return `<div class="choice-grid">${labels.map(([id, label]) => `<label class="choice"><input type="${type}" name="${name}" value="${id}" ${checked.includes(id) ? 'checked' : ''} ${type === 'radio' ? 'required' : ''}><span>${label}</span></label>`).join('')}</div>`;
+}
+function priorityFields() {
+  const labels = Object.entries(priorities).map(([id, [label]]) => [id, label]);
+  return `<details><summary>Сравнить ответы «Сейчас / Хочу»</summary>${workComparison()}</details><fieldset><legend>Если начать с одного изменения, что выберешь?</legend>${optionCards('priority', labels, [priority], 'radio')}</fieldset>`;
+}
+function dayFields() {
+  const available = choices[1].activities.filter(id => dayTasks[id]);
+  if (!available.length) return '<p class="intro">Для примерки нужно конкретное занятие. Пока можешь сравнить рабочие дни в двух интересных сферах или перейти к своим навыкам.</p>';
+  if (!available.includes(role)) role = available.length === 1 ? available[0] : '';
+  const select = available.length > 1 ? `<fieldset><label for="role"><strong>Какое занятие примерим первым?</strong></label><select name="role" id="role" required><option value="">Выбери одно занятие</option>${available.map(id => `<option value="${id}" ${role === id ? 'selected' : ''}>${activities[id][1]}</option>`).join('')}</select></fieldset>` : '';
+  const tasks = role ? `<fieldset><legend>Что из этого ты готова или готов делать регулярно?</legend><p class="hint">Пример задач для направления «${activities[role][1]}». Можно отметить любые пункты или пропустить.</p>${optionCards('reality', dayTasks[role].map((task,i) => [String(i), task]), reviews[role] ?? [])}</fieldset>` : '';
+  return select + tasks;
+}
+function skillsFields() {
+  return `<fieldset><legend>Что из этого ты уже умеешь?</legend><p class="hint">Можно вспомнить опыт из работы, своего дела или повседневной жизни.</p>${optionCards('skills', skills.map((skill,i) => [String(i), skill]), selectedSkills)}</fieldset>`;
+}
+function showForm() {
+  const form = document.createElement('form');
+  const fields = [null, () => workFields(0), () => workFields(1), incomeFields, priorityFields, dayFields, skillsFields];
+  form.innerHTML = fields[step]() + `<p class="error" id="form-error" role="alert" hidden></p><div class="buttons"><button type="button" class="secondary" id="back">Назад</button><button type="submit">${step === 6 ? 'Показать карту' : 'Дальше'}</button></div>`;
+  form.addEventListener('input', event => {
+    const input = event.target;
+    if (step < 3 && input.name === 'activities' && input.checked) {
+      const undecided = form.querySelector('[name="activities"][value="12"]');
+      if (undecided && input === undecided) {
+        for (const other of form.querySelectorAll('[name="activities"]')) if (other !== input) other.checked = false;
+      } else if (undecided) {
+        undecided.checked = false;
+      }
+    }
+    if (step === 5 && input.name === 'role') {
+      role = input.value;
+      persist();
+      render();
+      game.querySelector('#role').focus();
+      return;
+    }
+    save(form);
+    persist();
+    form.querySelector('#form-error').hidden = true;
+  });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    save(form);
+    if (step < 3 && !choices[step - 1].activities.length) {
+      const error = form.querySelector('#form-error');
+      error.textContent = 'Выбери хотя бы одно занятие.';
+      error.hidden = false;
+      form.querySelector('[name="activities"]').focus();
+      return;
+    }
+    goTo(step + 1);
+  });
+  form.querySelector('#back').onclick = () => { save(form); goTo(step - 1); };
+  game.append(form);
+}
+function save(form) {
+  const values = new FormData(form);
+  if (step < 3) {
+    const answer = choices[step - 1];
+    const selected = values.getAll('activities');
+    answer.activities = selected.includes('12') ? ['12'] : selected;
+    for (const [key] of axes) answer[key] = values.get(key) ?? '';
+    if (step === 2 && !answer.activities.includes(role)) role = '';
+    return;
+  }
+  if (step === 3) {
+    for (const key of Object.keys(money)) money[key] = values.get(key) ?? '';
+  } else if (step === 4) {
+    priority = values.get('priority') ?? '';
+  } else if (step === 5 && role) {
+    reviews[role] = values.getAll('reality');
+  } else if (step === 6) {
+    selectedSkills = values.getAll('skills');
+  }
+}
+function payResult() {
+  if (money.floor === '' && money.current !== '' && money.attitude === '0') return `Твой ориентир для сохранения дохода: от ${fmt.format(Number(money.current))} ₽ в месяц на руки.`;
+  if (money.floor === '') return 'Перед поиском прикинь месячный минимум на руки с учётом обязательных расходов.';
+  const floor = Number(money.floor);
+  const current = Number(money.current);
+  const threshold = fmt.format(floor) + ' ₽ в месяц';
+  if (money.current === '') return `Твой ориентир при поиске — от ${threshold} на руки.`;
+  if (money.attitude === '0') return `С учётом твоего решения сохранить доход ищи предложения от ${fmt.format(Math.max(floor,current))} ₽ на руки.`;
+  if (money.attitude === '3') return `Указанный минимум — ${threshold}. Сравни его с реальными предложениями и реши, какую разницу ты можешь принять.`;
+  if (floor >= current) return `При указанном минимуме (${threshold}) снижение относительно введённого дохода не помещается в бюджет.`;
+  const drop = fmt.format(current - floor) + ' ₽ в месяц';
+  return money.attitude === '1'
+    ? `Между указанным доходом и минимумом — ${drop}. Определи, сколько месяцев тебе подходит такой уровень и когда пересмотришь решение.`
+    : `Между указанным доходом и минимумом — ${drop}. Проверь, выдержит ли бюджет такую разницу на постоянной основе.`;
+}
+function firstStep() {
+  if (priority === 'tasks' && role) return activities[role][2];
+  return priorities[priority][1];
+}
+function comparisonRows() {
+  const tasks = choices.map((answer, phase) => answer.activities.map(id => activities[id][phase]));
+  return [
+    ['Задачи', tasks[0], tasks[1]],
+    ...axes.map(([key, , , title, options]) => [title, [options[choices[0][key]][0]], [options[choices[1][key]][1]]])
+  ];
+}
+function workComparison() {
+  const rows = comparisonRows().map(([title, current, future]) =>
+    `<tr><th scope="row">${title}</th><td>${current.join('<br>')}</td><td>${future.join('<br>')}</td></tr>`).join('');
+  return `<table><thead><tr><th scope="col">Что сравниваем</th><th scope="col">Сейчас</th><th scope="col">Хочу</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function daySummary() {
+  if (!role) return null;
+  const tasks = dayTasks[role].filter((_, i) => !(reviews[role] ?? []).includes(String(i)));
+  const note = tasks.length
+    ? 'Перед выбором уточни, как часто придётся выполнять эти задачи.'
+    : 'Тебе подходят все задачи из примера. Спроси специалиста, какие ещё обязанности занимают заметную часть его недели.';
+  return {title: 'Что уточнить о рабочем дне', note, tasks};
+}
+function dayResult() {
+  const day = daySummary();
+  if (!day) return '';
+  const list = day.tasks.length ? `<ul>${day.tasks.map(task => `<li>${task}</li>`).join('')}</ul>` : '';
+  return `<div class="result"><h3>${day.title}</h3>${day.note}${list}</div>`;
+}
+function showResult() {
+  const draft = 'Светлана, здравствуйте! Я прошёл(а) игру «Примерь новую профессию» и хочу записаться на консультацию по смене профессии для взрослых. Хочу разобрать свои результаты и понять, с чего начать.';
+  const consultationUrl = 'https://t.me/SvetlanaM_Borisenko?text=' + encodeURIComponent(draft);
+  const existingSkills = selectedSkills.map(id => skills[id]);
+  game.insertAdjacentHTML('beforeend', `<div class="result"><h3>${priorities[priority][0]}</h3><p><strong>Первый шаг.</strong> ${firstStep()}</p></div>
+    <details open><summary>Сейчас / Хочу</summary>${workComparison()}</details>
+    <div class="result"><h3>Условия по деньгам</h3><p>${payResult()}</p></div>
+    ${dayResult()}
+    ${existingSkills.length ? `<div class="result"><h3>Что возьму с собой</h3><p>${existingSkills.join(' · ')}</p></div>` : ''}
+    <div class="consultation">
+      <a class="consultation-link" href="${consultationUrl}" target="_blank" rel="noopener noreferrer">Разобрать результаты со специалистом</a>
+      <p class="hint">Откроется личный чат со Светланой в Telegram с готовым сообщением.</p>
+    </div>
+    <div class="buttons"><button type="button" id="download">Скачать полную карту PNG</button><button type="button" class="secondary" id="back">Назад</button><button type="button" class="secondary" id="edit">Изменить ответы</button><button type="button" class="secondary" id="reset">Пройти заново</button></div>
+    <p class="hint">PNG сохранит все разделы результата, включая указанные суммы дохода.</p><div id="download-result" aria-live="polite"></div>`);
+  game.querySelector('#download').onclick = downloadCard;
+  game.querySelector('#back').onclick = () => goTo(6);
+  game.querySelector('#edit').onclick = () => goTo(1);
+  game.querySelector('#reset').onclick = () => {
+    choices = [{activities: []}, {activities: []}];
+    money = {current: '', floor: '', attitude: ''};
+    priority = '';
+    role = '';
+    reviews = {};
+    selectedSkills = [];
+    goTo(0);
+  };
+}
+function layoutResultCard(ctx) {
+  const blocks = [];
+  const left = 100;
+  const width = 880;
+  const gutter = 32;
+  const column = (width - gutter) / 2;
+  let y = 164;
+  const titleFont = 'bold 61px Georgia, "Times New Roman", serif';
+  const sectionFont = 'bold 39px Georgia, "Times New Roman", serif';
+  const labelFont = 'bold 31px Arial, sans-serif';
+  const bodyFont = '34px Arial, sans-serif';
+  const comparisonFont = '31px Arial, sans-serif';
+
+  function text(value, x, top, maxWidth, font, lineHeight) {
+    ctx.font = font;
+    let line = '';
+    for (const word of value.split(/ +/)) {
+      const next = line ? line + ' ' + word : word;
+      if (line && ctx.measureText(next).width > maxWidth) {
+        blocks.push({line, x, top, font});
+        top += lineHeight;
+        line = word;
+      } else {
+        line = next;
+      }
+    }
+    if (line) blocks.push({line, x, top, font});
+    return top + lineHeight;
+  }
+
+  function section(title, drawContent) {
+    const top = y;
+    const fill = {x: 64, top, width: 952, height: 0};
+    blocks.push(fill);
+    y = text(title, left, y + 31, width, sectionFont, 49) + 15;
+    drawContent();
+    y += 24;
+    fill.height = y - top;
+    y += 26;
+  }
+
+  y = text('Моя карта перемен', left, y, width, titleFont, 74) + 24;
+  section(priorities[priority][0], () => {
+    if (role) {
+      y = text('Хочу попробовать', left, y, width, labelFont, 42);
+      y = text(activities[role][1], left, y, width, bodyFont, 45) + 16;
+    }
+    y = text('Первый шаг', left, y, width, labelFont, 42);
+    y = text(firstStep(), left, y, width, bodyFont, 46);
+  });
+
+  section('Сейчас / Хочу', () => {
+    const right = left + column + gutter;
+    const heading = y;
+    y = text('Сейчас', left, heading, column, labelFont, 43);
+    text('Хочу', right, heading, column, labelFont, 43);
+    for (const [title, current, future] of comparisonRows()) {
+      blocks.push({x: left, top: y + 3, width, height: 2});
+      const row = text(title, left, y + 18, width, labelFont, 43);
+      const bottom = [current, future].map((items, index) =>
+        items.reduce((top, item) => text(item, index ? right : left, top, column, comparisonFont, 42) + 8, row));
+      y = Math.max(...bottom) + 6;
+    }
+  });
+
+  section('Условия по деньгам', () => {
+    const amounts = [['Текущий доход', money.current], ['Нужный минимум', money.floor]];
+    for (const [label, amount] of amounts) {
+      if (amount !== '') y = text(`${label} · ${fmt.format(Number(amount))} ₽ в месяц на руки`, left, y, width, bodyFont, 46);
+    }
+    y = text(payResult(), left, y + 10, width, bodyFont, 46);
+  });
+
+  const day = daySummary();
+  if (day) {
+    section(day.title, () => {
+      y = text(day.note, left, y, width, bodyFont, 46);
+      for (const task of day.tasks) {
+        y += 10;
+        text('•', left, y, 25, bodyFont, 46);
+        y = text(task, left + 36, y, width - 36, bodyFont, 46);
+      }
+    });
+  }
+  if (selectedSkills.length) {
+    section('Что возьму с собой', () => {
+      y = text(selectedSkills.map(id => skills[id]).join(' · '), left, y, width, bodyFont, 46);
+    });
+  }
+  return {height: y + 24, blocks};
+}
+
+function downloadCard() {
+  const output = game.querySelector('#download-result');
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    output.textContent = 'В этом браузере не удалось создать изображение. Можно сохранить снимок экрана.';
+    return;
+  }
+
+  const layout = layoutResultCard(ctx);
+  canvas.width = 1080;
+  canvas.height = layout.height;
+  const background = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  background.addColorStop(0, '#d5efea');
+  background.addColorStop(0.5, '#fcfaf4');
+  background.addColorStop(1, '#f7e9ca');
+  ctx.fillStyle = background;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const logo = document.getElementById('brand-logo');
+  if (logo.complete && logo.naturalWidth) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(115, 96, 43, 0, 2 * Math.PI);
+    ctx.clip();
+    ctx.drawImage(logo, 72, 53, 86, 86);
+    ctx.restore();
+  }
+  ctx.fillStyle = '#173f3b';
+  ctx.font = 'bold 33px sans-serif';
+  ctx.fillText('Место решений', 182, 107);
+  ctx.textBaseline = 'top';
+  for (const block of layout.blocks) {
+    if (block.line) {
+      ctx.fillStyle = '#173f3b';
+      ctx.font = block.font;
+      ctx.fillText(block.line, block.x, block.top);
+    } else {
+      ctx.fillStyle = block.height === 2 ? '#c9ded4' : '#e9f4ee';
+      ctx.beginPath();
+      if (ctx.roundRect && block.height > 2) ctx.roundRect(block.x, block.top, block.width, block.height, 26);
+      else ctx.rect(block.x, block.top, block.width, block.height);
+      ctx.fill();
+    }
+  }
+  try {
+    const url = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.className = 'download-link';
+    link.href = url;
+    link.download = 'polnaya_karta_peremen.png';
+    link.textContent = 'Сохранить PNG';
+    if (!url.startsWith('data:image/png')) throw new Error('PNG unavailable');
+    const preview = document.createElement('img');
+    preview.className = 'download-preview';
+    preview.src = url;
+    preview.alt = 'Карта перемен для скачивания';
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Предпросмотр полной карты';
+    details.append(summary, preview);
+    output.replaceChildren(link, details);
+    link.click();
+  } catch {
+    output.textContent = 'Сохранить PNG не удалось. Можно сделать снимок экрана с результатом.';
+  }
+}
+restore();
+render();
+</script>
+</body>
+</html>
